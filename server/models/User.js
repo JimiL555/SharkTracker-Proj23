@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
   },
   favorites: [
     {
-      type: String, // Storing location as strings for simplicity; adjust if you want a more complex structure
+      type: mongoose.Schema.Types.ObjectId, // Reference to Shark model
+      ref: 'Shark',
     },
   ],
 });
