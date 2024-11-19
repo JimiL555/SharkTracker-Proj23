@@ -25,3 +25,31 @@ export const SIGNUP_USER = gql`
     }
   }
 `;
+
+// Add Shark mutation
+export const ADD_SHARK = gql`
+  mutation addShark(
+    $name: String!
+    $species: String!
+    $pingCount: Int
+    $location: String!
+    $region: String!
+    $timestamp: String
+  ) {
+    addShark(
+      name: $name
+      species: $species
+      pingCount: $pingCount
+      location: $location
+      region: $region
+      timestamp: $timestamp
+    ) {
+      id
+      name
+      species
+      location
+      region
+      timestamp
+    }
+  }
+`;

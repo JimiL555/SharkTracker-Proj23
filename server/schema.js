@@ -7,37 +7,24 @@ const typeDefs = gql`
     species: String!
     pingCount: Int!
     location: String!
+    region: String! # Add region for filtering
     timestamp: String!
   }
 
-  type User {
-    id: ID!
-    username: String!
-    favorites: [String]
-  }
-
-  type AuthPayload {
-    token: String!
-    user: User!
-  }
-
   type Query {
-    sharks: [Shark]
+    sharks(region: String): [Shark] # Allow filtering by region
     shark(id: ID!): Shark
-    currentUser: User
   }
 
   type Mutation {
-    signup(username: String!, password: String!): AuthPayload
-    login(username: String!, password: String!): AuthPayload
     addShark(
       name: String!
       species: String!
-      pingCount: Int!
+      pingCount: Int
       location: String!
-      timestamp: String!
+      region: String!
+      timestamp: String
     ): Shark
-    deleteShark(id: ID!): String
   }
 `;
 

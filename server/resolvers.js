@@ -6,9 +6,11 @@ const { signToken } = require('./utils/auth');
 
 const resolvers = {
   Query: {
-    sharks: async () => {
+    // Modified resolver to filter sharks by region
+    sharks: async (parent, { region }) => {
       try {
-        return await Shark.find();
+        const query = region ? { region } : {}; // If region is provided, filter by it
+        return await Shark.find(query);
       } catch (err) {
         console.error('Error fetching sharks:', err.message);
         throw new Error('Failed to fetch sharks');
@@ -27,18 +29,17 @@ const resolvers = {
         console.error('Authentication failed: No user found in context.');
         throw new AuthenticationError('Not authenticated. Please log in again.');
       }
-    
+
       try {
-        // Log the user context for debugging
         console.log('Fetching current user with context:', context.user);
-    
+
         const user = await User.findById(context.user._id);
-    
+
         if (!user) {
           console.error(`No user found with ID: ${context.user._id}`);
           throw new Error('User not found');
         }
-    
+
         return user;
       } catch (err) {
         console.error('Error fetching current user:', err.message);
@@ -84,7 +85,7 @@ const resolvers = {
         throw new Error('Failed to log in user');
       }
     },
-    addShark: async (parent, { name, species, pingCount, location, timestamp }, context) => {
+    addShark: async (parent, { name, species, pingCount, location, region, timestamp }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Not authenticated');
       }
@@ -95,8 +96,8 @@ const resolvers = {
           species,
           pingCount,
           location,
+          region, // Include region
           timestamp,
-          createdBy: context.user._id, // Associate with the authenticated user
         });
 
         return newShark;
@@ -116,7 +117,7 @@ const resolvers = {
           throw new Error('Shark not found');
         }
 
-        return "Shark successfully deleted";
+        return 'Shark successfully deleted';
       } catch (err) {
         console.error('Error deleting shark:', err.message);
         throw new Error('Failed to delete shark');
